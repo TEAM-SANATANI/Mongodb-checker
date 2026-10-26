@@ -3,8 +3,12 @@ from fastapi import FastAPI, Request
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, ConfigurationError
 import requests
+from mangum import Mangum
 
 app = FastAPI()
+
+# Mangum handler for Vercel serverless compatibility
+handler = Mangum(app)
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
@@ -29,7 +33,6 @@ async def telegram_webhook(request: Request):
         elif text.startswith("mongodb://") or text.startswith("mongodb+srv://"):
             send_message(chat_id, "🔄 Testing MongoDB connection... Please wait.")
             try:
-                # Set timeout to 5 seconds to avoid hanging
                 client = MongoClient(text, serverSelectionTimeoutMS=5000)
                 client.admin.command('ping')
                 send_message(chat_id, "✅ **Connection Successful!**\nThe MongoDB URL is active, valid, and responding.")
