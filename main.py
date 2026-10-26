@@ -58,5 +58,6 @@ def send_message(chat_id, text):
     requests.post(url, json=payload)
 
 @app.get("/")
+@app.head("/")
 def home():
     return {"status": "𝒮𝒶𝓃𝒶𝓉𝒶𝓃𝒾 𝑀𝑜𝓃𝑔𝑜𝐷𝐵 𝐵𝑜𝓉 is running successfully! 🙏"}
